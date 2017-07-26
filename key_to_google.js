@@ -20,7 +20,7 @@ function ensure_pointer(){
 
     pointer = document.getElementById("key_to_google_result_pointer");
     if (pointer == undefined){
-        document.body.innerHTML += "<div id='key_to_google_result_pointer' style='position:absolute;top:0;left:0;z-index:9999999;color:blue;'>&#9658;</div>"
+        document.body.innerHTML += "<div id='key_to_google_result_pointer' style='position:absolute;top:0;left:0;z-index:9999999;color:blue;opacity:0;'>&#9658;</div>"
         pointer = document.getElementById("key_to_google_result_pointer");
     }
 }
