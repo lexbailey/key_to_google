@@ -75,6 +75,7 @@ function keyup(event){
     if (event.keyCode == 191){
         searchbox = document.getElementById("lst-ib");
         if (searchbox != document.activeElement){
+            searchbox.scrollIntoView();
             searchbox.select();
         }
     }
