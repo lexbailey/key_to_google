@@ -66,7 +66,9 @@ function refreshResults(){
     for (i = 0; i<= result_headings.length-1; i++){
         results.push(result_headings[i].childNodes[0]);
     }
-    focus_result(0);
+    if (results.length > 0){
+        focus_result(0);
+    }
 }
 
 function keyup(event){
@@ -81,8 +83,10 @@ function keyup(event){
 function keydown(event){
     up=38
     down=40
-    if (event.keyCode == up){focus_result(-1)}
-    if (event.keyCode == down){focus_result(1)}
+    if (results.length > 0){
+        if (event.keyCode == up){focus_result(-1)}
+        if (event.keyCode == down){focus_result(1)}
+    }
 }
 
 window.addEventListener("DOMContentLoaded", function () {

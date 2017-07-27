@@ -3,11 +3,16 @@
 
   "name": "Key to Google",
   "description": "Adds keyboard shortcut functionality to google search results pages",
-  "version": "1.1",
+  "version": "1.2",
 
   "content_scripts": [
     {
-      "matches": ["http://www.google.com/*", "https://www.google.co.uk/*"],
+      "matches": [
+            "http://www.google.com/search*",
+            "https://www.google.com/search*",
+            "http://www.google.co.uk/search*",
+            "https://www.google.co.uk/search*"
+        ],
       "js": ["key_to_google.js"]
     }
   ],
