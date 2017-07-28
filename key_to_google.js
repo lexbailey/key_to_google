@@ -26,7 +26,7 @@ function ensure_pointer(){
 }
 
 function get_focussed_id(){
-    for (i = 0; i<= results.length-1; i++){
+    for (var i = 0; i<= results.length-1; i++){
         if (results[i] === document.activeElement){
             return i;
         }
@@ -40,6 +40,7 @@ function hide_pointer(event){
 }
 
 function focus_element(element){
+    if (element == -1){return;}
     element.focus();
     pos = getPosition(element);
     pointer.style.top = "" + pos.y + "px";
@@ -59,12 +60,28 @@ function focus_result(step){
     focus_element(results[fid]);
 }
 
+function get_a_element(heading){
+    children = heading.children;
+    for (var i = 0; i<= children.length-1; i++){
+        child = children[i];
+        if (child.tagName == "A"){
+            return child;
+        }
+        sub_a = get_a_element(child);
+        if (sub_a != -1){
+            return sub_a
+        }
+    }
+    return -1;
+}
+
 function refreshResults(){
     ensure_pointer();
     result_headings = document.getElementsByClassName("r");
     results = []
-    for (i = 0; i<= result_headings.length-1; i++){
-        results.push(result_headings[i].childNodes[0]);
+    for (var i = 0; i<= result_headings.length-1; i++){
+        el = get_a_element(result_headings[i]);
+        results.push(el);
     }
     if (results.length > 0){
         focus_result(0);
@@ -77,6 +94,7 @@ function keyup(event){
         if (searchbox != document.activeElement){
             searchbox.scrollIntoView();
             searchbox.select();
+            event.preventDefault();
         }
     }
 }
@@ -85,8 +103,8 @@ function keydown(event){
     up=38
     down=40
     if (results.length > 0){
-        if (event.keyCode == up){focus_result(-1)}
-        if (event.keyCode == down){focus_result(1)}
+        if (event.keyCode == up){focus_result(-1); event.preventDefault();}
+        if (event.keyCode == down){focus_result(1); event.preventDefault();}
     }
 }
 
@@ -98,3 +116,4 @@ document.onkeyup = keyup
 if(document.readyState === "complete" || document.readyState === "interactive") {
     refreshResults()
 }
+
