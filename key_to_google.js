@@ -16,6 +16,10 @@ function getPosition(el) {
   };
 }
 
+function isHidden(el) {
+    return (el.offsetParent === null)
+}
+
 function ensure_pointer(){
 
     pointer = document.getElementById("key_to_google_result_pointer");
@@ -81,7 +85,9 @@ function refreshResults(){
     results = []
     for (var i = 0; i<= result_headings.length-1; i++){
         el = get_a_element(result_headings[i]);
-        results.push(el);
+        if (!isHidden(el)){
+            results.push(el);
+        }
     }
     if (results.length > 0){
         focus_result(0);
