@@ -46,15 +46,21 @@ function hide_pointer(event){
 function focus_element(element){
     if (element == -1){return;}
     element.focus();
-    pos = getPosition(element);
+    var pos = getPosition(element);
     pointer.style.top = "" + pos.y + "px";
-    pointer.style.left = "" + pos.x-30 + "px";
+    var prevSib = element.previousSibling;
+    if (prevSib && prevSib.tagName == "SPAN") {
+        pointer.style.left = "" + pos.x-60 + "px";
+    }
+    else{
+        pointer.style.left = "" + pos.x-30 + "px";
+    }
     pointer.style.opacity="1";
     element.addEventListener("blur", hide_pointer, false);
 }
 
 function focus_result(step){
-    fid = get_focussed_id();
+    var fid = get_focussed_id();
     if (fid == -1){
         focus_element(results[0]);
         return;
@@ -65,7 +71,7 @@ function focus_result(step){
 }
 
 function get_a_element(heading){
-    children = heading.children;
+    var children = heading.children;
     for (var i = 0; i<= children.length-1; i++){
         child = children[i];
         if (child.tagName == "A"){
@@ -81,7 +87,7 @@ function get_a_element(heading){
 
 function refreshResults(){
     ensure_pointer();
-    result_headings = document.getElementsByClassName("r");
+    var result_headings = document.getElementsByClassName("r");
     results = []
     for (var i = 0; i<= result_headings.length-1; i++){
         el = get_a_element(result_headings[i]);
@@ -106,8 +112,8 @@ function keyup(event){
 }
 
 function keydown(event){
-    up=38
-    down=40
+    var up=38
+    var down=40
     if (results.length > 0){
         if (event.keyCode == up){focus_result(-1); event.preventDefault();}
         if (event.keyCode == down){focus_result(1); event.preventDefault();}
