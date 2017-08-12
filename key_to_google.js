@@ -2,18 +2,19 @@ var results=[];
 var pointer;
 
 function getPosition(el) {
-  var xPos = 0;
-  var yPos = 0;
+    // Get the absolute position of an element
+    var xPos = 0;
+    var yPos = 0;
  
-  while (el) {
-    xPos += (el.offsetLeft  + el.clientLeft);
-    yPos += (el.offsetTop + el.clientTop);
-    el = el.offsetParent;
-  }
-  return {
-    x: xPos,
-    y: yPos
-  };
+    while (el) {
+        xPos += (el.offsetLeft  + el.clientLeft);
+        yPos += (el.offsetTop + el.clientTop);
+        el = el.offsetParent;
+    }
+    return {
+        x: xPos,
+        y: yPos
+    };
 }
 
 function isHidden(el) {
@@ -21,15 +22,29 @@ function isHidden(el) {
 }
 
 function ensure_pointer(){
-
+    // Ensure the pointer exists if we are on the "all" tab
+    // (Other tabs someimtes have issues if the pointer is present)
+    var url = new URL(location);
+    var tab = url.searchParams.get("tbm");
     pointer = document.getElementById("key_to_google_result_pointer");
-    if (pointer == undefined){
-        document.body.innerHTML += "<div id='key_to_google_result_pointer' style='position:absolute;top:0;left:0;z-index:9999999;color:blue;opacity:0;'>&#9658;</div>"
-        pointer = document.getElementById("key_to_google_result_pointer");
+    if (tab == null){
+        // We are on the "all" tab, ensure the pointer exists
+        if (pointer == undefined){
+            document.body.innerHTML += "<div id='key_to_google_result_pointer' style='position:absolute;top:0;left:0;z-index:9999999;color:blue;opacity:0;'>&#9658;</div>"
+            pointer = document.getElementById("key_to_google_result_pointer");
+        }
+    }
+    else{
+        // Not on "all" tab, remove pointer
+        if (pointer != undefined){
+            pointer.parent.removeChild(pointer);
+        }
     }
 }
 
 function get_focussed_id(){
+    // Returns the index into 'results' of the focussed result
+    // or -1 if no result is focussed
     for (var i = 0; i<= results.length-1; i++){
         if (results[i] === document.activeElement){
             return i;
@@ -44,22 +59,27 @@ function hide_pointer(event){
 }
 
 function focus_element(element){
+    // Focus the result element specified
+    // there sometimes is a doc type label before it, use
+    // that to determine the position if needed
+    // also show the pointer and set the blur listener
     if (element == -1){return;}
     element.focus();
     var pos = getPosition(element);
-    pointer.style.top = "" + pos.y + "px";
     var prevSib = element.previousSibling;
     if (prevSib && prevSib.tagName == "SPAN") {
+        pos = getPosition(prevSib)
         pointer.style.left = "" + pos.x-60 + "px";
     }
-    else{
-        pointer.style.left = "" + pos.x-30 + "px";
-    }
+    pointer.style.left = "" + pos.x-30 + "px";
+    pointer.style.top = "" + pos.y + "px";
     pointer.style.opacity="1";
     element.addEventListener("blur", hide_pointer, false);
 }
 
 function focus_result(step){
+    // Focus a result relative to the focussed result
+    // or the first result if there is no focussed result
     var fid = get_focussed_id();
     if (fid == -1){
         focus_element(results[0]);
@@ -71,6 +91,7 @@ function focus_result(step){
 }
 
 function get_a_element(heading){
+    // Find the 'a' tag for a result heading
     var children = heading.children;
     for (var i = 0; i<= children.length-1; i++){
         child = children[i];
@@ -86,6 +107,7 @@ function get_a_element(heading){
 }
 
 function refreshResults(){
+    // Scan the page for results
     ensure_pointer();
     var result_headings = document.getElementsByClassName("r");
     results = []
@@ -101,6 +123,8 @@ function refreshResults(){
 }
 
 function keyup(event){
+    // Focus the search box and select all text if there
+    // is a '/' press
     if (event.keyCode == 191){
         searchbox = document.getElementById("lst-ib");
         if (searchbox != document.activeElement){
@@ -112,6 +136,7 @@ function keyup(event){
 }
 
 function keydown(event){
+    // Handle jogging up and down the results
     var up=38
     var down=40
     if (results.length > 0){
@@ -120,6 +145,7 @@ function keydown(event){
     }
 }
 
+// A bit of maddness to scan for results when the page has loaded
 window.addEventListener("DOMContentLoaded", function () {
     document.documentelement.addEventListener('DOMSubtreeModified', function() {refreshResults();}, false);
 });
