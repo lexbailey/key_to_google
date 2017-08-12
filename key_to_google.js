@@ -54,6 +54,7 @@ function get_focussed_id(){
 }
 
 function hide_pointer(event){
+    if (pointer == undefined){return}
     pointer.style.opacity="0";
     event.srcElement.removeEventListener("blur", hide_pointer);
 }
@@ -65,6 +66,7 @@ function focus_element(element){
     // also show the pointer and set the blur listener
     if (element == -1){return;}
     element.focus();
+    if (pointer == undefined){return}
     var pos = getPosition(element);
     var prevSib = element.previousSibling;
     if (prevSib && prevSib.tagName == "SPAN") {
