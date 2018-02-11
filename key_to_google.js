@@ -17,6 +17,18 @@ function getPosition(el) {
     };
 }
 
+function is_alt_search(el){
+    console.log(el.parentElement);
+    var p = el.parentElement;
+    if (p.nodeName == 'HTML'){
+        return false;
+    }
+    if (p.classList.contains('kno-kp')){
+        return true;
+    }
+    return is_alt_search(p);
+}
+
 function isHidden(el) {
     return (el.offsetParent === null)
 }
@@ -115,7 +127,7 @@ function refreshResults(){
     results = []
     for (var i = 0; i<= result_headings.length-1; i++){
         el = get_a_element(result_headings[i]);
-        if (!isHidden(el)){
+        if (!isHidden(el) && !is_alt_search(el)){
             results.push(el);
         }
     }
