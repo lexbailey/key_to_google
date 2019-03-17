@@ -18,7 +18,6 @@ function getPosition(el) {
 }
 
 function is_alt_search(el){
-    console.log(el.parentElement);
     var p = el.parentElement;
     if (p.nodeName == 'HTML'){
         return false;
@@ -140,7 +139,7 @@ function keyup(event){
     // Focus the search box and select all text if there
     // is a '/' press
     if (event.keyCode == 191){
-        searchbox = document.getElementById("lst-ib");
+        searchbox = document.querySelector('input[name=q]');
         if (searchbox != document.activeElement){
             searchbox.scrollIntoView();
             searchbox.select();
@@ -153,9 +152,12 @@ function keydown(event){
     // Handle jogging up and down the results
     var up=38
     var down=40
+    var searchbox = document.querySelector('input[name=q]');
+    if (searchbox === document.activeElement){return;}
     if (results.length > 0){
-        if (event.keyCode == up){focus_result(-1); event.preventDefault();}
-        if (event.keyCode == down){focus_result(1); event.preventDefault();}
+        if (event.keyCode == up){focus_result(-1); }
+        if (event.keyCode == down){focus_result(1); }
+        event.preventDefault();
     }
 }
 
