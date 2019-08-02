@@ -155,9 +155,8 @@ function keydown(event){
     var searchbox = document.querySelector('input[name=q]');
     if (searchbox === document.activeElement){return;}
     if (results.length > 0){
-        if (event.keyCode == up){focus_result(-1); }
-        if (event.keyCode == down){focus_result(1); }
-        event.preventDefault();
+        if (event.keyCode == up){focus_result(-1); event.preventDefault();}
+        if (event.keyCode == down){focus_result(1); event.preventDefault();}
     }
 }
 
